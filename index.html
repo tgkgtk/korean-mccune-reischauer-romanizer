@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>McCune-Reischauer Romanizer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="Romanizer workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Korean romanization</p>
+            <h1>McCune-Reischauer Romanizer</h1>
+          </div>
+          <div class="toolbar" aria-label="Romanization options">
+            <label class="toggle">
+              <input id="breves-toggle" type="checkbox" checked>
+              <span>Breves</span>
+            </label>
+            <label class="toggle">
+              <input id="word-division-toggle" type="checkbox" checked>
+              <span>ALA-LC spacing</span>
+            </label>
+            <label class="toggle">
+              <input id="capitalize-toggle" type="checkbox">
+              <span>Preserve case hints</span>
+            </label>
+          </div>
+        </header>
+
+        <div class="panes">
+          <section class="pane" aria-labelledby="input-title">
+            <div class="pane-header">
+              <h2 id="input-title">Korean text</h2>
+              <div class="button-row">
+                <label class="file-button" for="file-input">Upload .txt</label>
+                <input id="file-input" type="file" accept=".txt,text/plain">
+                <button id="sample-button" type="button">Sample</button>
+                <button id="clear-button" type="button" class="subtle">Clear</button>
+              </div>
+            </div>
+            <textarea id="source-text" spellcheck="false" placeholder="Paste Korean text here..."></textarea>
+          </section>
+
+          <section class="pane" aria-labelledby="output-title">
+            <div class="pane-header">
+              <h2 id="output-title">Romanized output</h2>
+              <div class="button-row">
+                <button id="copy-button" type="button">Copy</button>
+                <button id="download-button" type="button">Download</button>
+              </div>
+            </div>
+            <textarea id="output-text" spellcheck="false" readonly></textarea>
+          </section>
+        </div>
+
+        <footer class="statusbar">
+          <span id="count-status">0 Korean syllables</span>
+          <span id="copy-status" role="status" aria-live="polite"></span>
+        </footer>
+      </section>
+
+      <aside class="notes" aria-label="Romanization notes">
+        <h2>Engine Notes</h2>
+        <p>
+          This tool decomposes Hangul, applies McCune-Reischauer vowel and consonant mappings,
+          uses within-word boundary changes, and can insert ALA-LC-style spaces before common particles.
+        </p>
+        <p>
+          Korean romanization still has edge cases: proper names, compound division, spacing,
+          verb endings, and dictionary-specific readings may need a human pass.
+        </p>
+      </aside>
+    </main>
+
+    <script src="romanizer.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
