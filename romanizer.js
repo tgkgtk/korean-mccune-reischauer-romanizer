@@ -113,7 +113,50 @@
       "ㅇ": "ng", "ㄱ": "ngg", "ㄴ": "ngn", "ㄷ": "ngd", "ㄹ": "ngn",
       "ㅁ": "ngm", "ㅂ": "ngb", "ㅅ": "ngs", "ㅈ": "ngj", "ㅊ": "ngch'",
       "ㅋ": "ngk'", "ㅌ": "ngt'", "ㅍ": "ngp'", "ㅎ": "ngh"
+    },
+    "ㄳ": {
+      "ㅇ": "ks", "ㄴ": "ngn", "ㄹ": "ngn", "ㅁ": "ngm"
+    },
+    "ㄶ": {
+      "ㅇ": "nh", "ㄱ": "nk'", "ㄴ": "nn", "ㄷ": "nt'", "ㅂ": "np'",
+      "ㅈ": "nch'", "ㅅ": "nss"
+    },
+    "ㄵ": {
+      "ㅇ": "nj", "ㅎ": "nch'", "ㄱ": "nk", "ㄴ": "nn", "ㄷ": "nt",
+      "ㄹ": "nn", "ㅁ": "nm", "ㅂ": "np", "ㅅ": "ns", "ㅈ": "nch",
+      "ㅊ": "nch'", "ㅋ": "nk'", "ㅌ": "nt'", "ㅍ": "np'"
+    },
+    "ㄺ": {
+      "ㅇ": "lg", "ㄱ": "lg", "ㄲ": "lkk", "ㅋ": "lk'", "ㄴ": "ngn",
+      "ㄹ": "ngn", "ㅁ": "ngm", "ㅎ": "lk'"
+    },
+    "ㄻ": {
+      "ㅇ": "lm"
+    },
+    "ㄼ": {
+      "ㅇ": "lb", "ㅎ": "lp'", "ㄱ": "lg", "ㄴ": "ll", "ㄷ": "ld",
+      "ㄹ": "ll", "ㅁ": "lm", "ㅂ": "lb", "ㅍ": "lp'", "ㅃ": "lpp"
+    },
+    "ㄽ": {
+      "ㅇ": "ls"
+    },
+    "ㄾ": {
+      "ㅇ": "lt'"
+    },
+    "ㄿ": {
+      "ㅇ": "lp'", "ㄴ": "mn"
+    },
+    "ㅀ": {
+      "ㅇ": "rh", "ㄱ": "lk'", "ㄴ": "ll", "ㄷ": "lt'", "ㅂ": "lp'",
+      "ㅈ": "lch'"
+    },
+    "ㅄ": {
+      "ㅇ": "ps", "ㄴ": "mn", "ㄹ": "mn", "ㅁ": "mm"
     }
+  };
+
+  const RUN_EXCEPTIONS = {
+    "사건": "sakŏn"
   };
 
   const PARTICLE_SUFFIXES = [
@@ -219,10 +262,44 @@
     return INITIAL_MR[initial][style];
   }
 
-  function romanizeBoundary(final, nextInitial) {
+  function isIOrYVowel(vowel) {
+    return vowel === "ㅣ" || vowel === "ㅑ" || vowel === "ㅒ" || vowel === "ㅕ" ||
+      vowel === "ㅖ" || vowel === "ㅛ" || vowel === "ㅠ";
+  }
+
+  function romanizeBoundary(current, next) {
+    const final = current.final;
+    const nextInitial = next && next.initial;
     if (!final || !nextInitial) return null;
+    if (nextInitial === "ㅇ" && isIOrYVowel(next.vowel)) {
+      if (final === "ㄷ") return "j";
+      if (final === "ㅌ") return "ch'";
+      if (final === "ㄾ") return "lch'";
+    }
+    if (final === "ㅄ" && nextInitial === "ㅇ" && current.vowel === "ㅏ" && next.vowel === "ㅓ") {
+      return "p";
+    }
     if (BOUNDARY_MR[final] && BOUNDARY_MR[final][nextInitial]) {
       return BOUNDARY_MR[final][nextInitial];
+    }
+    if ((final === "ㄳ" || final === "ㄲ" || final === "ㅋ") &&
+        (nextInitial === "ㄴ" || nextInitial === "ㄹ" || nextInitial === "ㅁ")) {
+      return "ng" + romanizeInitial(nextInitial, "");
+    }
+    if ((final === "ㅅ" || final === "ㅆ" || final === "ㅈ" || final === "ㅊ" || final === "ㅌ") &&
+        (nextInitial === "ㄴ" || nextInitial === "ㄹ" || nextInitial === "ㅁ")) {
+      return "n" + romanizeInitial(nextInitial, "");
+    }
+    if ((final === "ㅂ" || final === "ㅍ" || final === "ㄼ" || final === "ㅄ") &&
+        (nextInitial === "ㄴ" || nextInitial === "ㄹ" || nextInitial === "ㅁ")) {
+      return "m" + romanizeInitial(nextInitial, "");
+    }
+    if ((final === "ㅅ" || final === "ㅆ" || final === "ㅈ" || final === "ㅊ" || final === "ㅌ") &&
+        (nextInitial === "ㅅ" || nextInitial === "ㅆ")) {
+      return "ss";
+    }
+    if (final === "ㅎ" && (nextInitial === "ㅅ" || nextInitial === "ㅆ")) {
+      return "ss";
     }
     if (nextInitial === "ㅇ") {
       return LIAISON[final];
@@ -240,6 +317,8 @@
   }
 
   function romanizeRun(run) {
+    if (RUN_EXCEPTIONS[run]) return RUN_EXCEPTIONS[run];
+
     const syllables = Array.from(run).map(decompose);
     const out = [];
     const initialHandledByPrevious = new Array(syllables.length).fill(false);
@@ -253,7 +332,7 @@
       let final = "";
 
       if (current.final) {
-        const boundary = next ? romanizeBoundary(current.final, next.initial) : null;
+        const boundary = next ? romanizeBoundary(current, next) : null;
         if (boundary !== null) {
           final = boundary;
           initialHandledByPrevious[i + 1] = true;
