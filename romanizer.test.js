@@ -65,5 +65,10 @@ assert.equal(romanizeText("우리의 사명", { wordDivision: true }), "uri ŭi 
 assert.equal(romanizeText("이 땅에서 학문 하기", { wordDivision: true }), "i ttang esŏ hangmun hagi");
 assert.equal(romanizeText("아이의 가슴에는 부모가 산다", { wordDivision: true }), "ai ŭi kasŭm enŭn pumo ka sanda");
 assert.equal(romanizeText("초원의 꿈을 그대에게", { wordDivision: true }), "ch'owŏn ŭi kkum ŭl kŭdae ege");
+assert.equal(romanizeText("[소래마을]", { wordDivision: true }), "Soremaŭl");
+assert.equal(romanizeText("[소래마을]에 갔다", { wordDivision: true }), "Soremaŭl e katta");
+assert.equal(romanizeText("[서울대학교]에서 공부했다", { wordDivision: true }), "Sŏuldaehakkyo esŏ kongbuhaetta");
+assert.equal(romanizeText("[이 순신]의 생애", { wordDivision: true, personNameHyphens: true }), "Yi Sun-sin ŭi saengae");
+assert.equal(romanizeText("[김 수환] 추기경", { wordDivision: true, personNameHyphens: true }), "Kim Su-hwan ch'ugigyŏng");
 
-console.log(`${cases.length + 14} romanizer checks passed`);
+console.log(`${cases.length + 19} romanizer checks passed`);

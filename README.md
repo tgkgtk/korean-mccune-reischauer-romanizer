@@ -6,6 +6,8 @@ Open `index.html` in a browser, paste Korean text, or upload a UTF-8 `.txt` file
 
 The `ALA-LC spacing` option applies a conservative particle-splitting pass before romanization. It separates common particles such as `의`, `은/는`, `이/가`, `을/를`, `에`, `에서`, `에게`, `와/과`, `로/으로`, `까지`, and `부터` when they appear attached to a preceding Korean word.
 
+For proper names, place the full name in square brackets, such as `[소래마을]`, `[서울대학교]`, or `[이 순신]`. Bracketed text is romanized as one proper-name unit, capitalized, and excluded from automatic particle spacing. With `Person-name hyphens` enabled, spaced personal names such as `[이 순신]` become `Yi Sun-sin`.
+
 ## Test
 
 ```sh
@@ -14,7 +16,7 @@ node romanizer.test.js
 
 ## Scope
 
-The engine handles Hangul decomposition, McCune-Reischauer vowel mappings, common initial/final consonant mappings, liaison before vowel-initial syllables, the common within-word boundary changes shown in the introductory romanization deck, and optional ALA-LC-style particle spacing.
+The engine handles Hangul decomposition, McCune-Reischauer vowel mappings, common initial/final consonant mappings, liaison before vowel-initial syllables, the common within-word boundary changes shown in the introductory romanization deck, optional ALA-LC-style particle spacing, and bracketed proper-name spans.
 
 The rule set has been checked against the University of Chicago Library's McCune-Reischauer chart and Universität Hamburg's detailed McCune-Reischauer transcription table, including compound-final examples such as `읽는다 -> ingnŭnda`, `읽고 -> ilgo`, `읽었습니다 -> ilgŏssŭmnida`, `값만 -> kamman`, `값어치 -> kapŏch'i`, and `없이 -> ŏpsi`.
 

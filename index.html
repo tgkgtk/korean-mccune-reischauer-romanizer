@@ -16,12 +16,12 @@
           </div>
           <div class="toolbar" aria-label="Romanization options">
             <label class="toggle">
-              <input id="breves-toggle" type="checkbox" checked>
-              <span>Breves</span>
-            </label>
-            <label class="toggle">
               <input id="word-division-toggle" type="checkbox" checked>
               <span>ALA-LC spacing</span>
+            </label>
+            <label class="toggle">
+              <input id="person-name-toggle" type="checkbox" checked>
+              <span>Person-name hyphens</span>
             </label>
             <label class="toggle">
               <input id="capitalize-toggle" type="checkbox">
@@ -62,20 +62,21 @@
         </footer>
       </section>
 
-      <aside class="notes" aria-label="Romanization notes">
-        <h2>Engine Notes</h2>
+      <aside class="notes" aria-label="Romanizer instructions">
+        <h2>How To Use</h2>
         <p>
-          This tool decomposes Hangul, applies McCune-Reischauer vowel and consonant mappings,
-          uses within-word boundary changes, and can insert ALA-LC-style spaces before common particles.
+          This tool romanizes Han'gŭl according to the McCune-Reischauer system. A .txt file containing
+          Han'gŭl text can also be uploaded to generate a romanized version.
         </p>
         <p>
-          Korean romanization still has edge cases: proper names, compound division, spacing,
-          verb endings, and dictionary-specific readings may need a human pass.
+          For proper names, place the full name in square brackets, e.g. [소래마을], [서울대학교],
+          or [이 순신]. Bracketed text is romanized as one proper-name unit, capitalized, and excluded
+          from automatic particle spacing.
         </p>
       </aside>
     </main>
 
-    <script src="romanizer.js?v=20260521-compound-finals"></script>
-    <script src="app.js?v=20260521-compound-finals"></script>
+    <script src="romanizer.js?v=20260618-proper-names"></script>
+    <script src="app.js?v=20260618-proper-names"></script>
   </body>
 </html>

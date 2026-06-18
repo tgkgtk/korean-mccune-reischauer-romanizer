@@ -3,8 +3,8 @@
 
   const sourceText = document.querySelector("#source-text");
   const outputText = document.querySelector("#output-text");
-  const brevesToggle = document.querySelector("#breves-toggle");
   const wordDivisionToggle = document.querySelector("#word-division-toggle");
+  const personNameToggle = document.querySelector("#person-name-toggle");
   const capitalizeToggle = document.querySelector("#capitalize-toggle");
   const fileInput = document.querySelector("#file-input");
   const sampleButton = document.querySelector("#sample-button");
@@ -16,7 +16,7 @@
 
   const sample = [
     "한글은 한국어를 적는 문자입니다.",
-    "서울에서 부산까지 기차를 탑니다.",
+    "[소래마을]에서 부산까지 기차를 탑니다.",
     "평양과 개성은 역사적으로 중요한 도시입니다."
   ].join("\n");
 
@@ -26,8 +26,8 @@
 
   function updateOutput() {
     let romanized = window.McCuneReischauer.romanizeText(sourceText.value, {
-      breves: brevesToggle.checked,
-      wordDivision: wordDivisionToggle.checked
+      wordDivision: wordDivisionToggle.checked,
+      personNameHyphens: personNameToggle.checked
     });
 
     if (capitalizeToggle.checked) {
@@ -48,8 +48,8 @@
   }
 
   sourceText.addEventListener("input", updateOutput);
-  brevesToggle.addEventListener("change", updateOutput);
   wordDivisionToggle.addEventListener("change", updateOutput);
+  personNameToggle.addEventListener("change", updateOutput);
   capitalizeToggle.addEventListener("change", updateOutput);
 
   sampleButton.addEventListener("click", () => {

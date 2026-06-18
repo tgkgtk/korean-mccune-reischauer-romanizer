@@ -159,6 +159,10 @@
     "사건": "sakŏn"
   };
 
+  const PROPER_NAME_EXCEPTIONS = {
+    "소래마을": "Soremaŭl"
+  };
+
   const PARTICLE_SUFFIXES = [
     "에서부터", "에게서는", "에게서", "에서는", "에선", "에게는", "에게도",
     "에게만", "까지는", "부터는", "으로는", "으로도", "으로만", "로서는",
@@ -205,6 +209,10 @@
 
   function stripBreves(text) {
     return text.replaceAll("ŏ", "o").replaceAll("Ŏ", "O").replaceAll("ŭ", "u").replaceAll("Ŭ", "U");
+  }
+
+  function capitalizeRomanized(text) {
+    return text.replace(/[A-Za-zŏŎŭŬ]/, (letter) => letter.toUpperCase());
   }
 
   function hasFinalConsonant(char) {
@@ -254,6 +262,22 @@
 
   function applyWordDivision(text) {
     return text.replace(/[가-힣]+/g, (word) => splitParticleSuffixes(word).join(" "));
+  }
+
+  function extractBracketedProperNames(text) {
+    const properNames = [];
+    const protectedText = text.replace(/\[([^\]]+)\]/g, (match, content) => {
+      const marker = `@@MRPROPER${properNames.length}@@`;
+      properNames.push(content.trim());
+      return marker;
+    });
+    return { protectedText, properNames };
+  }
+
+  function splitParticlesAfterProperNameMarkers(text) {
+    return text.replace(/(@@MRPROPER\d+@@)([가-힣]+)/g, (match, marker, suffix) => {
+      return `${marker} ${splitParticleSuffixes(suffix).join(" ")}`;
+    });
   }
 
   function romanizeInitial(initial, previousOutput) {
@@ -347,13 +371,11 @@
     return out.join("");
   }
 
-  function romanizeText(text, options = {}) {
-    const useBreves = options.breves !== false;
-    const sourceText = options.wordDivision ? applyWordDivision(text) : text;
+  function romanizePlainText(text) {
     let output = "";
     let run = "";
 
-    for (const char of sourceText) {
+    for (const char of text) {
       if (isHangulSyllable(char)) {
         run += char;
       } else {
@@ -366,6 +388,36 @@
     }
 
     if (run) output += romanizeRun(run);
+    return output;
+  }
+
+  function romanizeProperName(name, options = {}) {
+    if (PROPER_NAME_EXCEPTIONS[name]) return PROPER_NAME_EXCEPTIONS[name];
+
+    if (options.personNameHyphens) {
+      const parts = name.split(/\s+/).filter(Boolean);
+      if (parts.length > 1) {
+        const familyName = parts[0] === "이" ? "Yi" : capitalizeRomanized(romanizePlainText(parts[0]));
+        const givenSyllables = Array.from(parts.slice(1).join("")).map((char) => {
+          return isHangulSyllable(char) ? romanizePlainText(char) : char;
+        });
+        const givenName = givenSyllables.join("-");
+        return `${familyName} ${capitalizeRomanized(givenName)}`;
+      }
+    }
+
+    return capitalizeRomanized(romanizePlainText(name.replace(/\s+/g, "")));
+  }
+
+  function romanizeText(text, options = {}) {
+    const useBreves = options.breves !== false;
+    const { protectedText, properNames } = extractBracketedProperNames(text);
+    const sourceText = options.wordDivision ?
+      splitParticlesAfterProperNameMarkers(applyWordDivision(protectedText)) :
+      protectedText;
+    const output = romanizePlainText(sourceText).replace(/@@MRPROPER(\d+)@@/g, (match, index) => {
+      return romanizeProperName(properNames[Number(index)], options);
+    });
     return useBreves ? output : stripBreves(output);
   }
 
@@ -376,6 +428,7 @@
   global.McCuneReischauer = {
     romanizeText,
     applyWordDivision,
+    romanizeProperName,
     countHangulSyllables,
     decompose,
     stripBreves
