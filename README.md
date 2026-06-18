@@ -6,7 +6,7 @@ Open `index.html` in a browser, paste Korean text, or upload a UTF-8 `.txt` file
 
 The `ALA-LC spacing` option applies a conservative particle-splitting pass before romanization. It separates common particles such as `의`, `은/는`, `이/가`, `을/를`, `에`, `에서`, `에게`, `와/과`, `로/으로`, `까지`, and `부터` when they appear attached to a preceding Korean word.
 
-For proper names, place the full name in square brackets, such as `[소래마을]`, `[서울대학교]`, or `[이 순신]`. Bracketed text is romanized as one proper-name unit, capitalized, and excluded from automatic particle spacing. With `Person-name hyphens` enabled, spaced personal names such as `[이 순신]` become `Yi Sun-sin`.
+For proper names, place the full name in square brackets before any particles, e.g. `[부산]에`, `[소래마을]은`. Bracketed text is romanized as one proper-name unit, capitalized, and excluded from automatic particle spacing. For person-names, users can put a space between the family and given names, e.g. `[이 순신]`, to generate a formatted and hyphenated romanization.
 
 ## Test
 
